@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+#include <mpi.h>
+    double a=0,b=1;
+    double f(double x){return (1/(1+x*x));}
+    double I(double a,double b,int n,double y){return ((b-a)/(2*n)*y);}
+    double MPI_Wtime(void);
+    int main(int argc, char *argv[]) {
+        
+	int myrank, size;
+    MPI_Status Status;
+    MPI_Init(&argc, &argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+    double beg,end,total;
+        beg=MPI_Wtime();
+        
+	int n; double y,dy,In;
+	scanf("%d",&n);
+	
+
+
+       
+            y=0;
+            dy=(b-a)/n;
+            y+=f(a)+f(b);
+            for (int i=1; i<n; i++) {y+=2*(f(a+dy*i));}
+            In=I(a,b,n,y);
+            printf("распараллельно - %f\n",4*In);
+	 
+    end = MPI_Wtime();
+    total = end - beg;
+    printf("время %f",total);
+    MPI_Finalize();
+	return 0;
+    }
